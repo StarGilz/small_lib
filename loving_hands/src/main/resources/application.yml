@@ -1,0 +1,15 @@
+spring:
+    application:
+        name: loving_hands
+    datasource:
+        url: jdbc:sqlite:./loving_hands.db
+        driver-class-name: org.sqlite.JDBC
+    sql:
+        init:
+            mode: always
+            platform: sqlite
+mybatis:
+    mapper-locations: classpath:/mapper/**/*.xml
+    type-aliases-package: com.small_library.loving_hands.**
+    configuration:
+        map-underscore-to-camel-case: true

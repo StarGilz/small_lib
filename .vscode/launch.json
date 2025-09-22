@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-LovingHandsApplication<loving_hands>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.small_library.loving_hands.LovingHandsApplication",
+            "projectName": "loving_hands",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

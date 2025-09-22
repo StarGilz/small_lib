@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
+
+<th:block layout:fragment="css">
+
+</th:block>
+
+<th:block layout:fragment="content">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">도서 등록</h1>
+    </div>
+    <div class="row align-items-center">
+        <div class="order-md-last">
+            <div class="col-md-7 col-lg-8">
+                <form class="needs-validation" novalidate>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="bookName" class="form-label">도서명</label>
+                            <input type="text" class="form-control" id="bookName" placeholder="" value="" required/>
+                        </div>
+                        <div class="col-12">
+                            <label for="author" class="form-label">저자</label>
+                            <input type="text" class="form-control" id="author" placeholder="" required/>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="country" class="form-label">대분류</label>
+                            <select class="form-select" id="category" required>
+                                <option value="">Choose...</option>
+                                <th:block th:each="category : ${categories}">
+                                    <option th:text="${category.category} + '>' + ${category.name}"></option>
+                                </th:block>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="state" class="form-label">소분류</label>
+                            <select class="form-select" id="subcategory" required>
+                                <option value="">Choose...</option>
+                                <th:block th:each="subcategory : ${subcategories}">
+                                    <option 
+                                        th:value="${subcategory.subcategory}"
+                                        th:text="${subcategory.subcategory} + '>' + ${subcategory.name}"
+                                        th:attr="data-category=${#strings.substring(subcategory.subcategory, 0, 1)}"></option>
+                                    
+                                </th:block>
+                            </select>
+                        </div>  
+                        <div class="col-md-3">
+                            <label for="zip" class="form-label">고유번호</label>
+                            <input type="text" class="form-control" id="serialNumber" placeholder="7자리 숫자" maxlength="7" required/>
+                        </div>
+                        <hr class="my-4" />
+                        <form>
+                            <button class="w-100 btn btn-primary btn-lg" type="submit" id="registBtn">
+                                등록
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categorySelect = document.getElementById('category');
+            const subcategorySelect = document.getElementById('subcategory');
+            const allSubcategoryOptions = Array.from(subcategorySelect.querySelectorAll('option'));
+            const allSubcategoryCategories = allSubcategoryOptions.map(option => option.dataset.category);
+            
+            subcategorySelect.innerHTML = '<option value="">Choose...</option>';
+
+            categorySelect.addEventListener('change', function() {
+                const selectedCategory = this.value;
+                const categoryCode = selectedCategory.charAt(0);
+
+                subcategorySelect.innerHTML = '<option value="">Choose...</option>';
+                
+                allSubcategoryOptions.forEach(option => {
+                    if (option.dataset.category === categoryCode) {
+                        const newOption = option.cloneNode(true);
+                        subcategorySelect.appendChild(newOption);
+                    }
+                });
+            });
+        });
+
+        document.getElementById('registBtn').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const bookName = document.getElementById('bookName').value.trim();
+            const author = document.getElementById('author').value.trim();
+            const category = document.getElementById('category').value;
+            const categoryName = category.split('>')[1];
+            const subcategory = document.getElementById('subcategory').value;
+            const serialNumber = document.getElementById('serialNumber').value.trim();
+            const isbn = categoryName + '-' + subcategory + '-' + serialNumber;
+
+            if (!bookName || !author || !category || !subcategory || !serialNumber) {
+                alert('모든 필드를 올바르게 입력해주세요.');
+                return;
+            }
+
+            if (!/^\d{7}$/.test(serialNumber)) {
+                alert('고유번호는 7자리 숫자여야 합니다.');
+                return;
+            }
+
+            const data = {
+                "name": bookName,
+                "author": author,
+                "isbn": isbn
+            };
+
+            fetch('/book/regist', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('도서 등록에 실패했습니다.');
+                }
+            })
+            .then(data => {
+                console.log('Success:', data);
+                alert('도서가 성공적으로 등록되었습니다!');
+                window.location.href = '/book/list';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('도서 등록에 실패했습니다.');
+            });
+        });
+    </script>
+</th:block>
+</body>
+</html>

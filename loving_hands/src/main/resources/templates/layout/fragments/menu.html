@@ -1,0 +1,44 @@
+<th:block th:fragment="menu">
+    <div class="sidebar col-md-3 col-lg-2 p-0 bg-body-tertiary">
+        <div class="flex-shrink-0 p-3" style="width: 280px">
+            <a href="/" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+                <img src="/img/loving_hands_ci.png" alt="Loving Hands" width="130" height="32" class="me-2">
+            </a>
+            <ul class="list-unstyled ps-0">
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                        도서 관리
+                    </button>
+                    <div class="collapse" id="home-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li>
+                                <a th:href="@{/book/list}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                    도서 목록
+                                </a>
+                            </li>
+                            <li>
+                                <a th:href="@{/book/status}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                    도서 현황
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#member-collapse" aria-expanded="true">
+                        회원 관리
+                    </button>
+                    <div class="collapse" id="member-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li>
+                                <a href="/member/list" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                    회원 목록
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</th:block>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.small_library.loving_hands.book.mapper.BookMapper">
+	<select id="selectBookList">
+        SELECT *
+        FROM TB_BOOK
+	</select>
+
+    <insert id="insertBook" parameterType="BookVo">
+        INSERT INTO TB_BOOK (title, author, isbn, create_date)
+        VALUES (#{title}, #{author}, #{isbn}, datetime('now'))
+    </insert>
+
+    <select id="selectIsbn" resultType="BookVo">
+        SELECT CATEGORY, SUBCATEGORY, NAME
+        FROM TB_ISBN
+        ORDER BY CATEGORY, SUBCATEGORY
+    </select>
+</mapper>
